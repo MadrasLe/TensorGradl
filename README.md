@@ -98,5 +98,4 @@ O script `train_gpt.py` cria um modelo GPT pequeno, gera um dataset sintético (
 
 Inspirado no lendário [micrograd](https://github.com/karpathy/micrograd) do Andrej Karpathy, mas com esteróides: suporta Tensores N-dimensionais (não apenas escalares) e operações necessárias para rodar Transformers modernos.
 
----
-*Feito com 💜 e NumPy.*
+
