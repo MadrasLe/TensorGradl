@@ -10,13 +10,13 @@
 
 </div>
 
-## 🧠 Overview
+##  Overview
 
 **TensorGradl** is a lightweight, backend-agnostic Deep Learning framework built entirely from scratch. It is designed to demystify the "black box" of modern AI by implementing a fully dynamic **Autograd Engine** (Reverse-mode automatic differentiation) capable of training complex architectures like **GPT-2**.
 
 Unlike simple toy libraries, TensorGradl supports **GPU acceleration** via CuPy and integrates **C++ kernels** for performance-critical operations, bridging the gap between educational theory and production-grade engineering.
 
-## ✨ Key Features
+##  Key Features
 
 * **Dynamic Computational Graph:** Implements a DAG (Directed Acyclic Graph) for automatic gradient tracking and backpropagation (similar to PyTorch).
 * **Hardware Agnostic:** Seamlessly switches between **CPU (NumPy)** and **GPU (CuPy)** execution based on environment variables.
@@ -24,7 +24,7 @@ Unlike simple toy libraries, TensorGradl supports **GPU acceleration** via CuPy 
 * **C++ Extensions:** Includes a custom accelerator module demonstrating how to bind low-level C++ code to Python via `ctypes`.
 * **Production Optimizations:** Features `Weight Tying` in embeddings and numerical stability tricks in Cross Entropy Loss.
 
-## 🏛️ Architecture
+##  Architecture
 
 The framework is structured into modular components:
 
@@ -37,9 +37,9 @@ The framework is structured into modular components:
 | **Model** | `gpt.py` | A complete **GPT-2** implementation (Transformer Decoder) built using TensorGradl primitives. |
 | **Accelerator** | `accelerator.py` | Bridge to compiled C++ kernels for matrix operations. |
 
-## 🚀 Usage
+##  Usage
 
-### 1. The Magic Tensor (Autograd)
+### 1. The Tensor (Autograd)
 TensorGradl feels just like PyTorch. It tracks operations and calculates gradients automatically.
 
 ```python
@@ -82,7 +82,7 @@ export MINIGRAD_DEVICE="cuda"
 python benchmark.py
 ```
 
-⚡ Performance Benchmarks
+ Performance Benchmarks
 The repository includes benchmark.py and benchmark_cpp.py to evaluate the overhead of the Python autograd engine versus native C++ implementations.
 
 Python/NumPy: Baseline.
@@ -91,7 +91,7 @@ C++ Extension: Demonstrates significant speedups for raw matrix multiplications.
 
 CuPy (GPU): massive parallelism for large tensor operations.
 
-📂 File Structure
+ File Structure
 Plaintext
 
 TensorGradl/
@@ -104,6 +104,7 @@ TensorGradl/
 ├── train_gpt.py        # Proof-of-Concept Training Script
 ├── benchmark.py        # CPU vs GPU Benchmarks
 └── benchmark_cpp.py    # Python vs C++ Benchmarks
-📜 License
+
+ License
 
 Developed by Gabriel Yogi. Licensed under the GNU GPLv3.
