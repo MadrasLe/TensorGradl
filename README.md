@@ -1,101 +1,109 @@
-# 🧠 minigrad
+# TensorGradl: A Handcrafted Deep Learning Framework 
 
-> *A tiny, handcrafted deep learning library that thinks it's PyTorch.*
 
-**minigrad** é uma biblioteca de Deep Learning construída do zero em Python e NumPy, criada para fins educacionais. Ela implementa um motor de **Autograd** (diferenciação automática) completo e uma arquitetura **GPT-2** capaz de aprender padrões de texto.
+<div align="center">
 
-Se você quer entender o que acontece "por baixo do capô" de frameworks como PyTorch ou TensorFlow, você está no lugar certo.
+![Python](https://img.shields.io/badge/Python-3.10%2B-blue?logo=python)
+![CUDA](https://img.shields.io/badge/Backend-CUDA%20%2F%20CuPy-76B900?logo=nvidia)
+![C++](https://img.shields.io/badge/Extensions-C%2B%2B-00599C?logo=c%2B%2B)
+![Build](https://img.shields.io/badge/Build-From%20Scratch-orange)
 
-## ✨ O que tem dentro?
+</div>
 
-Apesar de pequeno, o `minigrad` é poderoso:
+## 🧠 Overview
 
-*   **Autograd Real**: Cálculo automático de gradientes via *backpropagation* (grafo dinâmico).
-*   **Tensores**: Suporte a broadcasting, transposição, reshape, slicing avançado e operações matriciais.
-*   **Camadas (Layers)**: `Linear`, `Embedding` (otimizado), `LayerNorm`, `ReLU`, `GELU`, `MultiHeadAttention`.
-*   **Otimizadores**: `SGD` e `Adam` (com correção de viés).
-*   **GPT-2**: Implementação completa do Transformer Decoder com **Weight Tying** (pesos compartilhados entre embedding e saída).
-*   **Loss**: `CrossEntropy` com estabilidade numérica básica.
+**TensorGradl** is a lightweight, backend-agnostic Deep Learning framework built entirely from scratch. It is designed to demystify the "black box" of modern AI by implementing a fully dynamic **Autograd Engine** (Reverse-mode automatic differentiation) capable of training complex architectures like **GPT-2**.
 
-## 📦 Instalação
+Unlike simple toy libraries, TensorGradl supports **GPU acceleration** via CuPy and integrates **C++ kernels** for performance-critical operations, bridging the gap between educational theory and production-grade engineering.
 
-Você só precisa do NumPy. Sério.
+## ✨ Key Features
 
-```bash
-pip install numpy
-```
+* **Dynamic Computational Graph:** Implements a DAG (Directed Acyclic Graph) for automatic gradient tracking and backpropagation (similar to PyTorch).
+* **Hardware Agnostic:** Seamlessly switches between **CPU (NumPy)** and **GPU (CuPy)** execution based on environment variables.
+* **Transformer-Ready:** Robust enough to handle `LayerNorm`, `Softmax`, `MultiHeadAttention`, and `GELU` activations, allowing for full GPT training.
+* **C++ Extensions:** Includes a custom accelerator module demonstrating how to bind low-level C++ code to Python via `ctypes`.
+* **Production Optimizations:** Features `Weight Tying` in embeddings and numerical stability tricks in Cross Entropy Loss.
 
-## 🚀 Como usar
+## 🏛️ Architecture
 
-### 1. O Tensor Mágico
-O coração da lib é a classe `Tensor`. Ela lembra o que você faz e sabe calcular a "volta" (backward).
+The framework is structured into modular components:
+
+| Component | File | Description |
+| :--- | :--- | :--- |
+| **Core** | `tensor.py` | The heart of the library. Handles data storage, graph construction, and recursive backward passes. |
+| **Backend** | `backend.py` | Abstract hardware layer. Dispatches operations to `numpy` or `cupy` dynamically. |
+| **NN Modules** | `nn.py` | State-of-the-art layers: `Linear`, `Embedding`, `LayerNorm`, `MultiHeadAttention`, `GELU`. |
+| **Optimizer** | `optim.py` | Implementation of **SGD** and **Adam** (with bias correction). |
+| **Model** | `gpt.py` | A complete **GPT-2** implementation (Transformer Decoder) built using TensorGradl primitives. |
+| **Accelerator** | `accelerator.py` | Bridge to compiled C++ kernels for matrix operations. |
+
+## 🚀 Usage
+
+### 1. The Magic Tensor (Autograd)
+TensorGradl feels just like PyTorch. It tracks operations and calculates gradients automatically.
 
 ```python
-import numpy as np
 from minigrad.tensor import Tensor
 
-# Crie tensores (autograd ativado por padrão)
+# Tensors with autograd enabled
 x = Tensor([2.0, 3.0])
 w = Tensor([0.5, -1.0])
 b = Tensor([1.0, 1.0])
 
-# O grafo computacional é construído dinamicamente
+# Dynamic Graph Construction
 y = x * w + b
-z = y.sum()
+loss = y.sum()
 
-# Backpropagation
-z.backward()
+# Backward Pass (The Magic)
+loss.backward()
 
-print(f"Resultado: {z.data}")
-print(f"Gradiente de x: {x.grad}") # dz/dx
+print(f"Result: {loss.data}")
+print(f"Gradients (dL/dx): {x.grad}") 
+2. Training GPT-2 from Scratch
+The repository includes a script to train a GPT model on a synthetic dataset (or TinyShakespeare) to demonstrate convergence.
 ```
-
-### 2. Treinando uma Rede Neural (MLP)
-
-```python
-import minigrad.nn as nn
-import minigrad.optim as optim
-
-# Defina o modelo
-model = nn.Sequential(
-    nn.Linear(2, 16),
-    nn.ReLU(),
-    nn.Linear(16, 1)
-)
-
-# Otimizador
-optimizer = optim.Adam(model.parameters(), lr=0.01)
-
-# Loop de treino (pseudocódigo)
-# out = model(x)
-# loss = (out - y).mean() # ou outra loss
-# optimizer.zero_grad()
-# loss.backward()
-# optimizer.step()
-```
-
-### 3. 🤖 Treinando o GPT-2
-
-O projeto inclui um script para treinar um modelo GPT (Transformer) do zero para aprender sequências.
 
 ```bash
-# Certifique-se de estar na raiz do projeto
+# Set PYTHONPATH to include the library
 export PYTHONPATH=$PYTHONPATH:.
-python3 train_gpt.py
+
+# Run the training loop
+python train_gpt.py
 ```
 
-O script `train_gpt.py` cria um modelo GPT pequeno, gera um dataset sintético (padrão repetitivo `0, 1, 2, 3...`) e treina o modelo até ele "grokkar" (entender) o padrão, alcançando Loss próxima de zero.
-
-## 📂 Estrutura do Código
-
-*   `minigrad/tensor.py`: O cérebro. Implementação do Tensor e Autograd.
-*   `minigrad/nn.py`: As camadas (Linear, Embedding, etc.).
-*   `minigrad/optim.py`: Os otimizadores (SGD, Adam).
-*   `minigrad/gpt.py`: A arquitetura do modelo GPT-2.
-*   `minigrad/loss.py`: Funções de perda.
-
-## 🎓 Por que "minigrad"?
-
-Inspirado no lendário [micrograd](https://github.com/karpathy/micrograd) do Andrej Karpathy, mas com esteróides: suporta Tensores N-dimensionais (não apenas escalares) e operações necessárias para rodar Transformers modernos.
+The model will learn the sequence patterns and minimize the CrossEntropy loss, proving the correctness of the Autograd engine.
 
 
+3. GPU Acceleration
+To run on NVIDIA GPUs, simply set the environment variable:
+
+```bash
+export MINIGRAD_DEVICE="cuda"
+python benchmark.py
+```
+
+⚡ Performance Benchmarks
+The repository includes benchmark.py and benchmark_cpp.py to evaluate the overhead of the Python autograd engine versus native C++ implementations.
+
+Python/NumPy: Baseline.
+
+C++ Extension: Demonstrates significant speedups for raw matrix multiplications.
+
+CuPy (GPU): massive parallelism for large tensor operations.
+
+📂 File Structure
+Plaintext
+
+TensorGradl/
+├── minigrad/           # The Framework Package
+│   ├── tensor.py       # Autograd Engine
+│   ├── nn.py           # Neural Network Layers
+│   ├── optim.py        # Optimizers (Adam/SGD)
+│   ├── gpt.py          # GPT-2 Model Architecture
+│   └── backend.py      # CPU/GPU Dispatcher
+├── train_gpt.py        # Proof-of-Concept Training Script
+├── benchmark.py        # CPU vs GPU Benchmarks
+└── benchmark_cpp.py    # Python vs C++ Benchmarks
+📜 License
+
+Developed by Gabriel Yogi. Licensed under the GNU GPLv3.
