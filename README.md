@@ -94,6 +94,7 @@ CuPy (GPU): massive parallelism for large tensor operations.
  File Structure
 Plaintext
 
+```bash
 TensorGradl/
 ├── minigrad/           # The Framework Package
 │   ├── tensor.py       # Autograd Engine
@@ -104,6 +105,7 @@ TensorGradl/
 ├── train_gpt.py        # Proof-of-Concept Training Script
 ├── benchmark.py        # CPU vs GPU Benchmarks
 └── benchmark_cpp.py    # Python vs C++ Benchmarks
+```
 
  License
 
